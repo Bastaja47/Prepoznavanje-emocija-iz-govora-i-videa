@@ -1,6 +1,5 @@
 # Multimodalno prepoznavanje emocija - MELD (audio + video)
 
-Semestralni projekat iz predmeta **Multimodalna percepcija covek-masina**.
 Cilj projekta je prepoznavanje emocija na MELD korpusu koriscenjem audio i
 video modaliteta, uz poredjenje jednomodalnih modela i rane/kasne fuzije.
 
@@ -82,4 +81,4 @@ pratecem izvestaju (`.docx`).
 
 ## Autor
 
-[Ime Prezime] - [indeks], Fakultet tehnickih nauka, Novi Sad
+Stojan Bastaja
