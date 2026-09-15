@@ -1,0 +1,11 @@
+train_splits/
+dev_splits_complete/
+output_repeated_splits_test/
+data/
+checkpoints/
+*.wav
+*.mp4
+*.npy
+venv/
+__pycache__/
+*.pyc
