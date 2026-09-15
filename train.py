@@ -1,5 +1,5 @@
 """
-Korak 5 - Trening jednog modela: audio / video / early_fusion,
+Trening jednog modela: audio / video / early_fusion,
 u jednoj od dve varijante (kao u referentnom radu):
 
   base   - bez temporal pooling-a (puna vremenska sekvenca, flatten),
@@ -14,9 +14,6 @@ Trening parametri (isti kao u referentnom radu):
 Rezultati (test acc/F1) se upisuju u results.csv, matrica konfuzije se
 cuva kao .png i .npy u confusion_matrices/, a najbolji model (po dev F1)
 u checkpoints/{model}_{variant}.pt.
-
-Pokretanje (obicno se NE poziva rucno - koristi run_all.py):
-    python train.py --model audio --variant base
 """
 
 import argparse
@@ -35,9 +32,9 @@ from common import (
     NUM_CLASSES, plot_confusion_matrix, append_result_row,
 )
 
-# ------------------------------------------------------------------
+
 MELD_ROOT = Path(r"C:\Users\XYZ\Desktop\MELD.Raw")
-# ------------------------------------------------------------------
+
 
 MANIFEST_FINAL = MELD_ROOT / "manifest_final.csv"
 CKPT_DIR = MELD_ROOT / "checkpoints"
