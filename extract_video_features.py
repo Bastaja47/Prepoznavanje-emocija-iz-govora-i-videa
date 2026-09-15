@@ -1,5 +1,5 @@
 """
-Korak 4 (video) - Ekstrakcija video obelezja pomocu InceptionResnetV1
+Ekstrakcija video obelezja pomocu InceptionResnetV1
 (pretrained na VGGFace2, iz facenet-pytorch).
 
 Ovo je NAS PREDLOG video ekstraktora obelezja za projekat. Model je
@@ -15,10 +15,6 @@ sekvencu (N_FRAMES, 512) po klipu - temporal pooling (mean+std) i "bez
 poolinga" varijanta se racunaju kasnije, u Koraku 5, iz ovog istog kesa.
 
 Rezultat: data/video_features/{split}/dia{D}_utt{U}.npy  oblika (8, 512)
-
-Skripta automatski preskace klipove kojima fajl lica ne postoji (onih ~820
-koji su ispali u Koraku 3), i "resumable" je - ako izlazni fajl vec postoji,
-preskace ga.
 """
 
 import numpy as np
