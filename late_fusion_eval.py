@@ -1,14 +1,9 @@
 """
-Korak 5 (kasna fuzija) - Racuna kasnu fuziju iz vec istreniranih audio i
+Racuna kasnu fuziju iz vec istreniranih audio i
 video modela za datu varijantu (base ili tp_cw).
 
     p_final = alpha * p_audio + (1 - alpha) * p_video,   alpha = 0.5
 
-(isto kao jednacina 1 u referentnom radu). Zahteva da su prethodno
-istrenirani audio_{variant}.pt i video_{variant}.pt (train.py).
-
-Pokretanje (obicno se NE poziva rucno - koristi run_all.py):
-    python late_fusion_eval.py --variant base
 """
 
 import argparse
@@ -23,9 +18,9 @@ from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 
 from common import MELDFeatureDataset, UnimodalMLP, NUM_CLASSES, plot_confusion_matrix, append_result_row
 
-# ------------------------------------------------------------------
+
 MELD_ROOT = Path(r"C:\Users\XYZ\Desktop\MELD.Raw")
-# ------------------------------------------------------------------
+
 
 MANIFEST_FINAL = MELD_ROOT / "manifest_final.csv"
 CKPT_DIR = MELD_ROOT / "checkpoints"
