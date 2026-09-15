@@ -1,5 +1,5 @@
 """
-Korak 3b (video) - Izvlacenje lica iz MELD video klipova.
+Izvlacenje lica iz MELD video klipova.
  
 Video ekstraktor obelezja koji koristimo (predlog za ovaj projekat):
   1) Iz svakog klipa se uzorkuje N_FRAMES ravnomerno rasporedjenih frejmova.

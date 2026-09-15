@@ -1,8 +1,6 @@
 """
-common.py - deljene komponente za Korak 5: Dataset klasa, arhitekture
-modela i pomocne funkcije (matrica konfuzije, upis rezultata).
-
-Koristi se iz train.py i late_fusion_eval.py - ne pokrece se direktno.
+Dataset klasa, arhitekture
+modela i pomocne funkcije (matrica konfuzije, upis rezultata)
 """
 
 import numpy as np
@@ -35,15 +33,15 @@ class MELDFeatureDataset(Dataset):
         return len(self.df)
 
     def _load_and_pool(self, path):
-        arr = np.load(path)  # (T, D)
+        arr = np.load(path)  # Učita .npy fajl sa embeddingom oblika (T, D) (T = vremenski koraci, D = dimenzija embeddinga)
         t = torch.from_numpy(arr).float()
-        if self.pooling == "tp":
+        if self.pooling == "tp":   #Temporal pooling: racuna se mean i std po vremenskoj dimenziji, pa se spajaju u vektor (2D,)
             mean = t.mean(dim=0)
             std = t.std(dim=0)
             return torch.cat([mean, std], dim=0)  # (2D,)
         return t.flatten()  # (T*D,)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx):           #Uzima jedan red iz DataFrame‑a|Mapira labelu emocije u indeks(LABEL2IDX)|U zavisnosti od modality
         row = self.df.iloc[idx]
         label = LABEL2IDX[row["emotion"]]
 
@@ -62,7 +60,7 @@ class MELDFeatureDataset(Dataset):
 
 
 class UnimodalMLP(torch.nn.Module):
-    """Isto za audio i video granu: dva potpuno povezana sloja (kao u radu)."""
+    """Isto za audio i video granu: dva potpuno povezana sloja"""
 
     def __init__(self, input_dim, hidden_dim=256, num_classes=NUM_CLASSES, dropout=0.3):
         super().__init__()
@@ -78,7 +76,7 @@ class UnimodalMLP(torch.nn.Module):
 
 
 class EarlyFusionMLP(torch.nn.Module):
-    """Tri potpuno povezana sloja (kao rana fuzija u referentnom radu)."""
+    """Tri potpuno povezana sloja/rana fuzija tj kombinujemo embedding vektore iz audio i video grane u jedan vektor i onda ga prosledjujemo kroz MLP"""
 
     def __init__(self, input_dim, fusion_hidden_dim=512, num_classes=NUM_CLASSES, dropout=0.3):
         super().__init__()
@@ -97,7 +95,7 @@ class EarlyFusionMLP(torch.nn.Module):
 
 
 def plot_confusion_matrix(cm, title, out_path):
-    """Matrica konfuzije: broj uzoraka + procenat po redu (stil kao u referentnom radu)."""
+    """Confusion matrix broj uzoraka + procenat po redu"""
     row_sums = cm.sum(axis=1, keepdims=True)
     row_pct = np.divide(
         cm, row_sums, out=np.zeros_like(cm, dtype=float), where=row_sums != 0

@@ -1,11 +1,8 @@
 """
-Korak 4 (finalizacija) - Pravljenje finalnog manifesta za trening.
+Pravljenje finalnog manifesta za trening
 
-Uzima samo one klipove koji imaju USPESNO izvucena i audio i video
-obelezja (data/audio_features i data/video_features). Ovo je jedini fajl
-koji ce Dataset klasa u Koraku 5 citati - sve dalje (trening, evaluacija)
-oslanja se na njega, tako da ne moramo nigde vise rucno da filtriramo
-nedostajuce fajlove.
+Uzima samo one klipove koji imaju uspesno izvucena i audio i video
+obelezja (data/audio_features i data/video_features). Ovo je ujedno i neka vrsta DRY fajla
 
 Rezultat: manifest_final.csv sa kolonama:
     split, dialogue_id, utterance_id, audio_feat_path, video_feat_path,
@@ -15,9 +12,9 @@ Rezultat: manifest_final.csv sa kolonama:
 import pandas as pd
 from pathlib import Path
 
-# ------------------------------------------------------------------
+
 MELD_ROOT = Path(r"C:\Users\XYZ\Desktop\MELD.Raw")
-# ------------------------------------------------------------------
+
 
 MANIFEST = MELD_ROOT / "manifest.csv"
 AUDIO_FEAT_DIR = MELD_ROOT / "data" / "audio_features"

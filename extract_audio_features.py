@@ -1,23 +1,19 @@
 """
-Korak 4 (audio) - Ekstrakcija audio obelezja pomocu wav2vec2.
+Ekstrakcija audio obelezja pomocu wav2vec2.
 
 Koristimo facebook/wav2vec2-base (pretrained, BEZ fine-tuning-a - isto kao
 u referentnom radu) kao fiksni ekstraktor obelezja. Model se ne dotrenirava,
 samo se koristi njegov encoder da iz normalizovanog 6s audio signala izvuce
-sekvencu latentnih reprezentacija dimenzije 768.
+sekvencu latentnih reprezentacija dimenzije 768
 
-Cuvamo SIROVU vremensku sekvencu (T, 768) po klipu - temporal pooling
-(mean+std) i "bez poolinga" varijanta se racunaju kasnije, u Koraku 5, iz
-ovog istog keша, da ne bismo duplirali podatke na disku.
+onda cuvamo sirovu vremensku sekvencu (T, 768) po klipu
 
 Kako je svaki audio fajl fiksne duzine (6s @ 16kHz), T (broj vremenskih
-koraka na izlazu wav2vec2 enkodera) je isti za sve klipove.
+koraka na izlazu wav2vec2 enkodera) je isti za sve klipove
 
 Rezultat: data/audio_features/{split}/dia{D}_utt{U}.npy  oblika (T, 768)
 
-Skripta automatski preskace klipove kojima audio fajl ne postoji (npr. onaj
-1 korumpovani iz Koraka 3), i "resumable" je - ako izlazni fajl vec postoji,
-preskace ga.
+Dodao da se preskacu fajlovi koji ne postoje
 """
 
 import numpy as np
@@ -28,9 +24,9 @@ from pathlib import Path
 from transformers import Wav2Vec2FeatureExtractor, Wav2Vec2Model
 from tqdm import tqdm
 
-# ------------------------------------------------------------------
+
 MELD_ROOT = Path(r"C:\Users\XYZ\Desktop\MELD.Raw")
-# ------------------------------------------------------------------
+
 
 MANIFEST = MELD_ROOT / "manifest.csv"
 AUDIO_DIR = MELD_ROOT / "data" / "audio"
@@ -42,7 +38,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Koristim device: {device}")
 print(f"Ucitavam {MODEL_NAME} (prvi put ce skinuti tezine, ~360MB)...")
 
-processor = Wav2Vec2FeatureExtractor.from_pretrained(MODEL_NAME)
+processor = Wav2Vec2FeatureExtractor.from_pretrained(MODEL_NAME)     #HuggingFace extractor koji ce normalizovati ulazni audio signal u opseg [-1, 1] i resamplovati ga na 16kHz
 model = Wav2Vec2Model.from_pretrained(MODEL_NAME).eval().to(device)
 for p in model.parameters():
     p.requires_grad_(False)
@@ -53,7 +49,7 @@ def extract_clip_embedding(wav_path):
     wav, sr = sf.read(wav_path, dtype="float32")
     assert sr == SAMPLE_RATE, f"Ocekivano {SAMPLE_RATE}Hz, dobijeno {sr}Hz"
 
-    inputs = processor(wav, sampling_rate=SAMPLE_RATE, return_tensors="pt")
+    inputs = processor(wav, sampling_rate=SAMPLE_RATE, return_tensors="pt")   #Feature extractor (processor) normalizuje signal i vraća PyTorch tenzor
     input_values = inputs.input_values.to(device)
 
     out = model(input_values)
@@ -69,7 +65,7 @@ def main():
     skipped_missing = 0
     failed = []
 
-    for _, row in tqdm(manifest.iterrows(), total=len(manifest)):
+    for _, row in tqdm(manifest.iterrows(), total=len(manifest)):   #Za svaki putanju do fajla
         split = row["split"]
         dia, utt = row["dialogue_id"], row["utterance_id"]
         audio_path = AUDIO_DIR / split / f"dia{dia}_utt{utt}.wav"

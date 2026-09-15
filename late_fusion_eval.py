@@ -1,14 +1,9 @@
 """
-Korak 5 (kasna fuzija) - Racuna kasnu fuziju iz vec istreniranih audio i
-video modela za datu varijantu (base ili tp_cw).
+Racuna kasnu fuziju iz vec istreniranih audio i
+video modela za datu varijantu (base ili tp_cw)
 
     p_final = alpha * p_audio + (1 - alpha) * p_video,   alpha = 0.5
 
-(isto kao jednacina 1 u referentnom radu). Zahteva da su prethodno
-istrenirani audio_{variant}.pt i video_{variant}.pt (train.py).
-
-Pokretanje (obicno se NE poziva rucno - koristi run_all.py):
-    python late_fusion_eval.py --variant base
 """
 
 import argparse
@@ -23,9 +18,9 @@ from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 
 from common import MELDFeatureDataset, UnimodalMLP, NUM_CLASSES, plot_confusion_matrix, append_result_row
 
-# ------------------------------------------------------------------
+
 MELD_ROOT = Path(r"C:\Users\XYZ\Desktop\MELD.Raw")
-# ------------------------------------------------------------------
+
 
 MANIFEST_FINAL = MELD_ROOT / "manifest_final.csv"
 CKPT_DIR = MELD_ROOT / "checkpoints"
@@ -45,9 +40,9 @@ def load_model(ckpt_path, device):
 
 
 def get_probs(model, loader, device):
-    all_probs, all_labels = [], []
+    all_probs, all_labels = [], []   #lista tenzora i labela
     with torch.no_grad():
-        for feats, labels in loader:
+        for feats, labels in loader:  #ulazni vektori i labela batcha
             feats = feats.to(device)
             logits = model(feats)
             probs = F.softmax(logits, dim=1)
@@ -58,7 +53,7 @@ def get_probs(model, loader, device):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--variant", required=True, choices=["base", "tp_cw"])
+    parser.add_argument("--variant", required=True, choices=["base", "tp_cw"])  #base je bez temporal pooling-a, tp_cw je sa temporal pooling-om i class weighting-om
     args = parser.parse_args()
 
     pooling = "tp" if args.variant == "tp_cw" else "none"
@@ -88,7 +83,7 @@ def main():
 
     assert labels_a == labels_v, "Redosled test uzoraka mora biti isti za audio i video!"
 
-    final_probs = ALPHA * audio_probs + (1 - ALPHA) * video_probs
+    final_probs = ALPHA * audio_probs + (1 - ALPHA) * video_probs  #alfa smo setovali na 0.5 da je jednako audio/video
     preds = final_probs.argmax(axis=1)
 
     acc = accuracy_score(labels_a, preds)

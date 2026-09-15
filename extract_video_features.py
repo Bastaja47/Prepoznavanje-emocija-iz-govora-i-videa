@@ -1,24 +1,12 @@
 """
-Korak 4 (video) - Ekstrakcija video obelezja pomocu InceptionResnetV1
-(pretrained na VGGFace2, iz facenet-pytorch).
+Ekstrakcija video obelezja pomocu InceptionResnetV1(pretrained na VGGFace2, iz facenet-pytorch)
 
-Ovo je NAS PREDLOG video ekstraktora obelezja za projekat. Model je
-pretreniran za prepoznavanje/verifikaciju identiteta lica (NE za
-prepoznavanje emocija), i koristi se kao fiksni ekstraktor obelezja - bez
-fine-tuning-a - potpuno analogno tome kako referentni rad koristi
-wav2vec2/BERT kao generisce, ne-emocijski-nadgledane reprezentacije.
-
-Za svaki klip imamo N_FRAMES=8 isecenih lica (iz Koraka 3), fiksne velicine
+Za svaki klip imamo N_FRAMES=8 isecenih lica, fiksne velicine
 160x160 - sto je bas ocekivana ulazna velicina ovog modela. Svaki frejm se
 propusta kroz model i dobija se 512-dimenzionalni embedding, pa cuvamo
-sekvencu (N_FRAMES, 512) po klipu - temporal pooling (mean+std) i "bez
-poolinga" varijanta se racunaju kasnije, u Koraku 5, iz ovog istog kesa.
+sekvencu (N_FRAMES, 512) po klipu
 
 Rezultat: data/video_features/{split}/dia{D}_utt{U}.npy  oblika (8, 512)
-
-Skripta automatski preskace klipove kojima fajl lica ne postoji (onih ~820
-koji su ispali u Koraku 3), i "resumable" je - ako izlazni fajl vec postoji,
-preskace ga.
 """
 
 import numpy as np
@@ -28,9 +16,9 @@ from pathlib import Path
 from facenet_pytorch import InceptionResnetV1
 from tqdm import tqdm
 
-# ------------------------------------------------------------------
+
 MELD_ROOT = Path(r"C:\Users\XYZ\Desktop\MELD.Raw")
-# ------------------------------------------------------------------
+
 
 MANIFEST = MELD_ROOT / "manifest.csv"
 FACES_DIR = MELD_ROOT / "data" / "faces"
